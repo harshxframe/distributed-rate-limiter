@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+src/
+jspm_packages/
+web_modules/
+
+# Local environment variables and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Build outputs and caches
+dist/
+build/
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.out/
+.svelte-kit/
+
+# Testing and coverage summaries
+coverage/
+.nyc_output/
+
+# IDE/Editor specific configs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+
+# OS generated files
+.DS_Store
+Thumbs.db

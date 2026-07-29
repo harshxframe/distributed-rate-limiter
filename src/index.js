@@ -1,20 +1,22 @@
+import { createStrategy } from "./strategies/StrategyFactory.js";
 import { head_validator } from "./validators/head_validator.js";
 
-function RateLimiter({ limit, window, strategy, keyGenerator, redis }) {
+export function RateLimiter({ limit, window, strategy, keyGenerator, redis }) {
   try {
-    const obj = {
+    const options = {
       limit,
       window,
       strategy,
       keyGenerator,
       redis,
     };
-    head_validator(obj);
+    head_validator(options);
+    const strategyInstance = createStrategy(options);
 
-
+    return (req, res, next) => {
+      next();
+    };
   } catch (e) {
-    console.log(e.message);
+    throw e;
   }
 }
-
-RateLimiter({limit:100, window:60000, keyGenerator:()=>{return "key"}});
