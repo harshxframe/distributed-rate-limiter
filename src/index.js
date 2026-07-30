@@ -1,7 +1,18 @@
 import { createStrategy } from "./strategies/StrategyFactory.js";
+import { attachHeader } from "./utils/addHeaders.js";
 import { head_validator } from "./validators/head_validator.js";
 
-export function RateLimiter({ limit, window, strategy, keyGenerator, redis, onLimitReached }) {
+export function RateLimiter({
+  limit,
+  window,
+  strategy,
+  keyGenerator,
+  redis,
+  message,
+  onLimitReached,
+  headers,
+  identifier
+}) {
   try {
     const options = {
       limit,
@@ -19,11 +30,26 @@ export function RateLimiter({ limit, window, strategy, keyGenerator, redis, onLi
       if (typeof key != "string" || key.trim() === "") {
         throw new Error("Key not valid");
       }
-      const response = await strategyInstance.consume(key);
-      if (!response.allowed) {
-        return onLimitReached(req, res, next, response);
+      const result = await strategyInstance.consume(key);
+      identifier = identifier || "default";
+      result["identifier"] = identifier;
+      req.rateLimit = result; 
+      headers? attachHeader(res, result, identifier):()=>{};
+
+      
+      if (!result.allowed) {
+        if (onLimitReached) {
+          return onLimitReached(req, res, next, result);
+        }
+        return res.status(429).json({
+          success: false,
+          message: message || "Limit exceeded",
+          retryAfter: result.retryAfter,
+        });
       }
-      req.RateLimiter = response;
+
+
+
       next();
     };
   } catch (e) {
