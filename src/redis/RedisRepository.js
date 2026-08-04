@@ -1,20 +1,3 @@
-/*
-get()
-set()
-del()
-incr()
-expire()
-ttl()
-
-zadd()
-zcount()
-zremrangebyscore()
-
-lpush()
-rpop()
-llen()
-*/
-
 export class RedisRespository {
   constructor(redis) {
     this.redis = redis;
@@ -58,10 +41,29 @@ export class RedisRespository {
 
   //++++++++++++++++++++++++++++++++++++++++++
   // Need to implement redis repo for sliding window.
-  
 
+  async removeExpired(key, windowStart) {
+    return await this.redis.zRemRangeByScore(
+      key,
+      "-inf",
+      `(${windowStart}`, 
+    );
+  }
 
+  async count(key) {
+    return await this.redis.zCard(key);
+  }
 
+  async addStamp(key, now) {
+    await this.redis.zAdd(key, {
+      score: Number(now),
+      value: crypto.randomUUID(),
+    });
+  }
 
-
+  async oldestStamp(key) {
+    const result = await this.redis.zRangeWithScores(key, 0, 0);
+    if (result.length === 0) return null;
+    return result[0].score;
+  }
 }

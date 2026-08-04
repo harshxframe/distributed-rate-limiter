@@ -30,7 +30,7 @@ export function RateLimiter({
       if (typeof key != "string" || key.trim() === "") {
         throw new Error("Key not valid");
       }
-      const result = await strategyInstance.consume(key);
+      const result = await strategyInstance.consume(key);    
       identifier = identifier || "default";
       result["identifier"] = identifier;
       req.rateLimit = result; 
