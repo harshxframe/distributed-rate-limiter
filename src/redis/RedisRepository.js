@@ -43,11 +43,7 @@ export class RedisRespository {
   // Need to implement redis repo for sliding window.
 
   async removeExpired(key, windowStart) {
-    return await this.redis.zRemRangeByScore(
-      key,
-      "-inf",
-      `(${windowStart}`, 
-    );
+    return await this.redis.zRemRangeByScore(key, "-inf", `(${windowStart}`);
   }
 
   async count(key) {
@@ -65,5 +61,26 @@ export class RedisRespository {
     const result = await this.redis.zRangeWithScores(key, 0, 0);
     if (result.length === 0) return null;
     return result[0].score;
+  }
+
+  // ++++++++++++++++++++++++++++++++++++++++++++
+  async saveBucket(key, bucket) {
+    await this.redis.hSet(key, bucket);
+  }
+
+  async getBucket(key) {
+    const obj = await this.redis.hGetAll(key);
+    if (Object.keys(obj).length === 0) {
+      return {};
+    }
+
+    return {
+      tokens: Number(obj.tokens),
+      lastRefill: Number(obj.lastRefill),
+    };
+  }
+
+  async deleteBucket(key) {
+    await this.redis.hDel(key);
   }
 }
