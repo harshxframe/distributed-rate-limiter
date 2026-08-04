@@ -58,4 +58,10 @@ export class RedisRespository {
 
   //++++++++++++++++++++++++++++++++++++++++++
   // Need to implement redis repo for sliding window.
+  
+
+
+
+
+
 }
