@@ -83,4 +83,41 @@ export class RedisRespository {
   async deleteBucket(key) {
     await this.redis.hDel(key);
   }
+
+  // +++++++++++++++++++++++++++++++++++++++++++
+  async pushItem(key, value) {
+    return await this.redis.rPush(key, String(value));
+  }
+
+  async popItem(key) {
+    return await this.redis.lPop(key);
+  }
+
+  async getAllItems(key) {
+    return await this.redis.lRange(key, 0, -1);
+  }
+
+  async size(key) {
+    return await this.redis.lLen(key);
+  }
+
+  async peek(key) {
+    return await this.redis.lIndex(key, 0);
+  }
+
+  async clear(key) {
+    return await this.redis.del(key);
+  }
+  async saveLastLeakTime(key, timestamp) {
+    return await this.redis.set(`${key}:lastLeak`, String(timestamp));
+  }
+
+  async getLastLeakTime(key) {
+    const value = await this.redis.get(`${key}:lastLeak`);
+    return value ? Number(value) : null;
+  }
+
+  async deleteLastLeakTime(key) {
+    return await this.redis.del(`${key}:lastLeak`);
+  }
 }
