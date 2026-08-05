@@ -26,7 +26,6 @@ export class RedisRespository {
     return this.redis.del(key);
   }
 
-  //++++++++++++++++++++++++++++++++++++++++++++
   async increment(key) {
     return await this.redis.incr(key);
   }
@@ -64,6 +63,8 @@ export class RedisRespository {
   }
 
   // ++++++++++++++++++++++++++++++++++++++++++++
+    // Need to implement redis repo for Token Bucket.
+
   async saveBucket(key, bucket) {
     await this.redis.hSet(key, bucket);
   }
@@ -85,6 +86,8 @@ export class RedisRespository {
   }
 
   // +++++++++++++++++++++++++++++++++++++++++++
+      // Need to implement redis repo for Leaky Bucket.
+
   async pushItem(key, value) {
     return await this.redis.rPush(key, String(value));
   }

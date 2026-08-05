@@ -35,7 +35,6 @@ export function RateLimiter({
       result["identifier"] = identifier;
       req.rateLimit = result; 
       headers? attachHeader(res, result, identifier):()=>{};
-
       if (!result.allowed) {
         if (onLimitReached) {
           return onLimitReached(req, res, next, result);
