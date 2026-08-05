@@ -121,7 +121,3 @@ While building this project I explored:
 One interesting finding was that a naive JavaScript implementation of Sliding Window suffers from race conditions under heavy concurrency, which is why production implementations usually rely on Redis Lua scripts for atomic execution.
 
 ---
-
-## License
-
-MIT
